@@ -1,0 +1,10 @@
+name: House_Rent_CI
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters:
+      n_estimators: {type: int, default: 115}
+      max_depth: {type: int, default: 22}
+    command: "python modelling.py --n_estimators {n_estimators} --max_depth {max_depth}"
