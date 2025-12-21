@@ -11,7 +11,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 
-dagshub.init(repo_owner='levinafauziah', repo_name='House-Rent-Prediction', mlflow=True)
+#dagshub.init(repo_owner='levinafauziah', repo_name='House-Rent-Prediction', mlflow=True)
+
+tracking_uri = "https://dagshub.com/levinafauziah/House-Rent-Prediction.mlflow"
+mlflow.set_tracking_uri(tracking_uri)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -20,7 +23,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load Data
-    # Pastikan file ini ada di folder 'dataset_preprocessed' relatif terhadap file script
     df = pd.read_csv('dataset_preprocessed/data_clean.csv')
     
     X = df.drop('rent', axis=1)
@@ -37,11 +39,10 @@ if __name__ == "__main__":
         )
         rf.fit(X_train, y_train)
         
-        # Buat Prediksi untuk Metrik & Plot
         predictions = rf.predict(X_test)
         
         # Log Params & Metrics
-        mlflow.log_params(vars(args)) # Mengambil parameter dari argparse
+        mlflow.log_params(vars(args))
         mlflow.log_metric("mse", mean_squared_error(y_test, predictions))
         mlflow.log_metric("r2_score", r2_score(y_test, predictions))
         
