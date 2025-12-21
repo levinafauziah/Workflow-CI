@@ -1,7 +1,5 @@
-name: House_Rent_CI
-
+name: House_Rent_Automation
 conda_env: conda.yaml
-
 entry_points:
   main:
     parameters:
