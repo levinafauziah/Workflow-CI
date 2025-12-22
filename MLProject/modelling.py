@@ -13,8 +13,11 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 #dagshub.init(repo_owner='levinafauziah', repo_name='House-Rent-Prediction', mlflow=True)
 
-tracking_uri = "https://dagshub.com/levinafauziah/House-Rent-Prediction.mlflow"
-mlflow.set_tracking_uri(tracking_uri)
+tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
+if tracking_uri:
+    mlflow.set_tracking_uri(tracking_uri)
+
+print(f"Tracking URI: {mlflow.get_tracking_uri()}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -80,7 +83,7 @@ if __name__ == "__main__":
     plt.close()
     
     # Log Model
-    mlflow.sklearn.log_model(sk_model=rf,
+    mlflow.sklearn.log_model(rf,
     artifact_path="model")
 
 print("Training & Logging Selesai!")
