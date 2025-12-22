@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mlflow dagshub pandas scikit-learn matplotlib seaborn cloudpickle
+          pip install mlflow==2.19.0 dagshub pandas scikit-learn matplotlib seaborn cloudpickle
       
       - name: Set MLflow DagsHub Env
         run: |
@@ -34,8 +34,7 @@ jobs:
       - name: Run mlflow project
         run: |
           cd MLProject
-          mlflow run . --env-manager=local > mlflow_execution.log 2>&1
-          cat mlflow_execution.log
+          python modelling.py
       
       - name: Extract RUN_ID
         run: |
@@ -77,7 +76,7 @@ jobs:
       - name: Build Docker Model
         run: |
           mlflow models build-docker \
-          -m runs:/${{ env.RUN_ID }}/mlflow-artifacts \
+          -m models:/house_rent_model/Production \
           -n levinafauziah/house-rent-ci \
           --install-mlflow
 
