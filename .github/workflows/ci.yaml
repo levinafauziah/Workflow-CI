@@ -42,14 +42,6 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Berhasil mengekstrak RUN_ID: $RUN_ID"
 
-      - name: List MLflow artifacts
-        env:
-          MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
-          MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
-          MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
-        run: |
-          mlflow artifacts list --run-id ${{ env.RUN_ID }}
-
       - name: Install Python dependencies
         run: pip install --upgrade pip
 
