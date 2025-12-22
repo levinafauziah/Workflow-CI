@@ -39,7 +39,7 @@ if __name__ == "__main__":
         mlflow.log_metric("mse", mean_squared_error(y_test, preds))
         mlflow.log_metric("r2", r2_score(y_test, preds))
 
-        # Log model (INI YANG DIPAKAI DOCKER)
+        # Log model
         mlflow.sklearn.log_model(
             model,
             artifact_path="model",
