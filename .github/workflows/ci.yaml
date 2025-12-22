@@ -73,17 +73,10 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
           MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
         run: |
-          # Download ke folder lokal
-          mlflow artifacts download \
-            --run-id ${{ env.RUN_ID }} \
-            --artifact-path "house_rent_model" \
-            --dst-path docker_model
-
-          # Build menggunakan path lokal yang baru saja didownload
           mlflow models build-docker \
-            -m "docker_model/house_rent_model" \
-            -n "house-rent-image" \
-            --install-mlflow
+          -m runs:/${{ env.RUN_ID }}/model \
+          -n levinafauziah/house-rent-ci \
+          --install-mlflow
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
