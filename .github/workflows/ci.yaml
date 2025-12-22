@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12.7"
 
-      - name: Check environment
+      - name: Check env
         run: |
           python --version
           pip --version
@@ -72,7 +72,7 @@ jobs:
         run: |
           mlflow artifacts list --run-id $RUN_ID
       
-      - name: Upload artifacts (optional)
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mlflow-artifacts
