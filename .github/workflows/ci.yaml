@@ -77,7 +77,7 @@ jobs:
       - name: Build Docker Model
         run: |
           mlflow models build-docker \
-          -m runs:/${{ env.RUN_ID }}/model \
+          -m runs:/${{ env.RUN_ID }}/mlflow-artifacts \
           -n levinafauziah/house-rent-ci \
           --install-mlflow
 
