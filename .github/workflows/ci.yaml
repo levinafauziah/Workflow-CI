@@ -82,16 +82,15 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
           MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
         run: |
-          # 1. Download model dari DagsHub ke folder lokal 'docker_model'
-          # Kita pastikan RUN_ID valid dari step sebelumnya
+          # Mengatur kredensial agar MLflow bisa mendownload artefak tanpa interaksi browser
+          # Ini adalah kunci untuk menyelesaikan error "Failed to download artifacts"
           mlflow artifacts download \
             --run-id ${{ env.RUN_ID }} \
-            --artifact-path "MLProject/outputs" \
+            --artifact-path "house_rent_model" \
             --dst-path docker_model
 
-          # 2. Build docker menggunakan folder lokal tersebut
-          # Kita tidak menggunakan --env-manager local di sini agar MLflow 
-          # bisa membuat environment yang sesuai di dalam image Docker
+          # Build Docker menggunakan hasil download lokal
+          # Kami tidak menggunakan --env-manager local agar Docker bisa membangun lingkungan yang terisolasi
           mlflow models build-docker \
             -m "docker_model/house_rent_model" \
             -n "house-rent-image" \
