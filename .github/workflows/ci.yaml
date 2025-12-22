@@ -61,20 +61,11 @@ jobs:
       - name: Install Python dependencies
         run: pip install --upgrade pip
 
-      - name: Save Artifacts to GitHub
-        run: |
-          mkdir -p outputs
-          cp MLProject/*.png outputs/ || true
-
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add outputs/
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "docs: update training artifacts [run-id ${{ env.RUN_ID }}]"
-            git push
-          fi
+      - name: Upload artifacts to GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-artifacts
+          path: MLProject/
 
       - name: Build Docker Model
         env:
