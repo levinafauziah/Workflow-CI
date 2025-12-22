@@ -86,7 +86,7 @@ jobs:
           # Kita pastikan RUN_ID valid dari step sebelumnya
           mlflow artifacts download \
             --run-id ${{ env.RUN_ID }} \
-            --artifact-path "house_rent_model" \
+            --artifact-path "MLProject/outputs" \
             --dst-path docker_model
 
           # 2. Build docker menggunakan folder lokal tersebut
