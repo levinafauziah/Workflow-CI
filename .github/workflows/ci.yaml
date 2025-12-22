@@ -38,26 +38,26 @@ jobs:
           python modelling.py
 
       - name: Get latest MLflow run id
-      run: |
-        python <<EOF
-        import mlflow
+        run: |
+          python <<EOF
+          import mlflow
 
-        client = mlflow.tracking.MlflowClient()
-        runs = client.search_runs(
-            experiment_ids=["0"],
-            order_by=["attributes.start_time DESC"],
-            max_results=1
-        )
+          client = mlflow.tracking.MlflowClient()
+          runs = client.search_runs(
+              experiment_ids=["0"],
+              order_by=["attributes.start_time DESC"],
+              max_results=1
+          )
 
-        if not runs:
-            raise RuntimeError("RUN_ID tidak ditemukan")
+          if not runs:
+              raise RuntimeError("RUN_ID tidak ditemukan")
 
-        run_id = runs[0].info.run_id
-        print("RUN_ID:", run_id)
+          run_id = runs[0].info.run_id
+          print("RUN_ID:", run_id)
 
-        with open("$GITHUB_ENV", "a") as f:
-            f.write(f"RUN_ID={run_id}\n")
-        EOF
+          with open("$GITHUB_ENV", "a") as f:
+              f.write(f"RUN_ID={run_id}\n")
+          EOF
 
       - name: List MLflow artifacts
         run: |
