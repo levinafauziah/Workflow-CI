@@ -36,6 +36,15 @@ jobs:
         run: |
           cd MLProject
           python modelling.py
+      
+      - name: Commit MLflow artifacts to repo
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          git add MLProject/*.png
+          git commit -m "Add MLflow artifacts from CI" || echo "No changes to commit"
+          git push
 
       - name: Get latest MLflow run id
         run: |
@@ -62,6 +71,12 @@ jobs:
       - name: List MLflow artifacts
         run: |
           mlflow artifacts list --run-id $RUN_ID
+      
+      - name: Upload artifacts (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-artifacts
+          path: MLProject/*.png
 
       - name: Build Docker Model
         run: |
