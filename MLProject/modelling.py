@@ -34,56 +34,25 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-    # Training Model
-    rf = RandomForestRegressor(
-        n_estimators=args.n_estimators, 
-        max_depth=args.max_depth, 
-        random_state=42
-    )
-    rf.fit(X_train, y_train)
-    
-    predictions = rf.predict(X_test)
-    
-    # Log Params & Metrics
-    mlflow.log_params(vars(args))
-    mlflow.log_metric("mse", mean_squared_error(y_test, predictions))
-    mlflow.log_metric("r2_score", r2_score(y_test, predictions))
-    
-    # 1: Feature Importance
-    plt.figure(figsize=(10, 6))
-    feat_importances = pd.Series(rf.feature_importances_, index=X.columns)
-    feat_importances.nlargest(10).plot(kind='barh', color='teal')
-    plt.title("Top 10 Feature Importance")
-    plt.tight_layout()
-    plt.savefig("feature_importance.png")
-    mlflow.log_artifact("feature_importance.png")
-    plt.close()
+    with mlflow.start_run():
+        rf = RandomForestRegressor(
+            n_estimators=args.n_estimators,
+            max_depth=args.max_depth,
+            random_state=42
+        )
+        rf.fit(X_train, y_train)
 
-    # 2: Residual Plot 
-    plt.figure(figsize=(10, 6))
-    residuals = y_test - predictions
-    sns.scatterplot(x=predictions, y=residuals)
-    plt.axhline(y=0, color='r', linestyle='--')
-    plt.xlabel('Predicted Rent')
-    plt.ylabel('Residuals (Actual - Predicted)')
-    plt.title('Residual Plot')
-    plt.savefig("residual_plot.png")
-    mlflow.log_artifact("residual_plot.png")
-    plt.close()
+        predictions = rf.predict(X_test)
 
-    # 3: Actual vs Predicted
-    plt.figure(figsize=(10, 6))
-    plt.scatter(y_test, predictions, alpha=0.5)
-    plt.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=2)
-    plt.xlabel('Actual Rent')
-    plt.ylabel('Predicted Rent')
-    plt.title('Actual vs Predicted')
-    plt.savefig("actual_vs_predicted.png")
-    mlflow.log_artifact("actual_vs_predicted.png")
-    plt.close()
-    
-    # Log Model
-    mlflow.sklearn.log_model(rf,
-    artifact_path="model")
+        mlflow.log_params(vars(args))
+        mlflow.log_metric("mse", mean_squared_error(y_test, predictions))
+        mlflow.log_metric("r2_score", r2_score(y_test, predictions))
+
+        mlflow.log_artifact("feature_importance.png")
+        mlflow.log_artifact("residual_plot.png")
+        mlflow.log_artifact("actual_vs_predicted.png")
+
+        mlflow.sklearn.log_model(rf, artifact_path="model")
+
 
 print("Training & Logging Selesai!")
