@@ -80,6 +80,6 @@ if __name__ == "__main__":
         plt.close()
         
         # Log Model
-        mlflow.sklearn.log_model(rf, "house_rent_model")
+        mlflow.sklearn.log_model(rf, "model")
 
 print("Training & Logging Selesai!")
