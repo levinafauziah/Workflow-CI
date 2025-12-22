@@ -80,6 +80,7 @@ if __name__ == "__main__":
     plt.close()
     
     # Log Model
-    mlflow.sklearn.log_model(rf, "model")
+    mlflow.sklearn.log_model(sk_model=rf,
+    artifact_path="model")
 
 print("Training & Logging Selesai!")
