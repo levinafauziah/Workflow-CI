@@ -14,6 +14,7 @@ if __name__ == "__main__":
     parser.add_argument("--max_depth", type=int, default=22)
     args = parser.parse_args()
 
+    # Load data
     df = pd.read_csv("dataset_preprocessed/data_clean.csv")
     X = df.drop("rent", axis=1)
     y = df["rent"]
@@ -32,22 +33,28 @@ if __name__ == "__main__":
 
         preds = model.predict(X_test)
 
+        # Log params & metrics
         mlflow.log_params(vars(args))
         mlflow.log_metric("mse", mean_squared_error(y_test, preds))
         mlflow.log_metric("r2", r2_score(y_test, preds))
 
-        mlflow.sklearn.log_model(model, artifact_path="model")
-
-        plt.figure()
+        # Plot residuals
+        plt.figure(figsize=(8, 6))
         sns.scatterplot(x=preds, y=y_test - preds)
-        plt.axhline(0)
+        plt.axhline(0, linestyle="--")
+        plt.xlabel("Predicted")
+        plt.ylabel("Residual")
+        plt.title("Residual Plot")
+        plt.tight_layout()
         plt.savefig("residual_plot.png")
         mlflow.log_artifact("residual_plot.png")
+        plt.close()
 
+        # Log & REGISTER model (INI YANG PENTING)
         mlflow.sklearn.log_model(
-            rf,
+            model,
             artifact_path="model",
             registered_model_name="house_rent_model"
         )
 
-print("Training & Logging Selesai!")
+    print("Training & Logging Selesai!")
