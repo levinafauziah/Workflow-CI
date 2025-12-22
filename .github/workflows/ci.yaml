@@ -38,9 +38,13 @@ jobs:
           MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
         run: |
           cd MLProject
-          mlflow run . --env-manager=local | tee mlflow_execution.log
-          RUN_ID=$(grep -oP 'Run with ID \K[a-f0-9]+' mlflow_execution.log | head -n 1)
-          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          mlflow run . --env-manager=local --run-id-file run_id.txt
+          echo "RUN_ID=$(cat run_id.txt)" >> $GITHUB_ENV
+      
+      - name: Debug RUN_ID
+        run: |
+          echo "RUN_ID=${{ env.RUN_ID }}"
+          test -n "${{ env.RUN_ID }}"
 
       - name: Download MLflow model artifact
         env:
