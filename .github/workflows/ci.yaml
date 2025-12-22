@@ -82,7 +82,13 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
           MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
         run: |
-          mlflow models build-docker -m "runs:/${{ env.RUN_ID }}/house_rent_model" -n "house-rent-image" --env-manager local
+          mlflow artifacts download -u "runs:/${{ env.RUN_ID }}/house_rent_model"
+
+          mlflow models build-docker \
+            -m "runs:/${{ env.RUN_ID }}/house_rent_model" \
+            -n "house-rent-image" \
+            --install-mlflow \
+            --env-manager local
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
