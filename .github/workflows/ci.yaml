@@ -24,13 +24,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install mlflow dagshub pandas scikit-learn matplotlib seaborn cloudpickle
-
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          python-version: '3.12.7'
-          activate-environment: test
+      
+      - name: Set MLflow DagsHub Env
+        run: |
+          echo "MLFLOW_TRACKING_URI=https://dagshub.com/levinafauziah/House-Rent-Prediction.mlflow" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_USERNAME=levinafauziah" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.DAGSHUB_TOKEN }}" >> $GITHUB_ENV
 
       - name: Run mlflow project
         env:
@@ -38,7 +37,9 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
           MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
         run: |
-          mlflow run MLProject/ --experiment-name House_Rent_CI --env-manager local
+          cd MLProject
+          mlflow run . --env-manager=local > mlflow_execution.log 2>&1
+          cat mlflow_execution.log
 
       - name: Get latest MLflow run_id
         id: get_run_id
