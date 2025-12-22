@@ -77,15 +77,17 @@ jobs:
           fi
 
       - name: Build Docker Model
+      - name: Build Docker Model
         env:
           MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
           MLFLOW_TRACKING_URI: https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow
         run: |
-          mlflow artifacts download -u "runs:/${{ env.RUN_ID }}/house_rent_model" --dst-path local_model
+          MODEL_PATH=$(find MLProject/mlruns -name "house_rent_model" -type d | head -n 1)
+          echo "Building from local path: $MODEL_PATH"
 
           mlflow models build-docker \
-            -m "local_model/house_rent_model" \
+            -m "$MODEL_PATH" \
             -n "house-rent-image" \
             --install-mlflow \
             --env-manager local
