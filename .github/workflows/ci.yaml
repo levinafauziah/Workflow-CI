@@ -48,6 +48,7 @@ jobs:
           MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
         run: |
           python -c "
+          import os
           import mlflow
           mlflow.set_tracking_uri('https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/House-Rent-Prediction.mlflow')
           runs = mlflow.search_runs(experiment_names=['House_Rent_CI'])
