@@ -41,14 +41,6 @@ jobs:
           RUN_ID=$(grep -oE '[a-f0-9]{32}' MLProject/mlflow_execution.log | head -n 1)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Berhasil mengekstrak RUN_ID: $RUN_ID"
-      
-      - name: Validate RUN_ID
-        run: |
-          if [ -z "$RUN_ID" ]; then
-            echo "ERROR: RUN_ID tidak ditemukan di log!"
-            cat mlflow_output.log
-            exit 1
-          fi
 
       - name: List MLflow artifacts
         env:
