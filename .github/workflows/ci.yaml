@@ -41,7 +41,7 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-          git add *.png
+          git add MLProject/*.png
           git commit -m "Add MLflow artifacts from CI" || echo "No changes to commit"
           git push
 
@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mlflow-artifacts
-          path: "*.png"
+          path: MLProject/*.png
 
       - name: Build Docker Model
         run: |
