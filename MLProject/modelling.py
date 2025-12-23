@@ -54,8 +54,8 @@ if __name__ == "__main__":
         plt.ylabel("Residual")
         plt.title("Residual Plot")
         plt.tight_layout()
-        plt.savefig("MLProject/residual_plot.png")
-        mlflow.log_artifact("MLProject/residual_plot.png")
+        plt.savefig("residual_plot.png")
+        mlflow.log_artifact("residual_plot.png")
         plt.close()
 
     print("Training & Logging Selesai!")
