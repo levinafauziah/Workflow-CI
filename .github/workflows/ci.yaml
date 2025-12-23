@@ -47,13 +47,13 @@ jobs:
 
       - name: Get latest MLflow run id
         run: |
-          python <<EOF
+          python <<'EOF'
           import mlflow
+          import os
 
           client = mlflow.tracking.MlflowClient()
           runs = client.search_runs(
               experiment_ids=["0"],
-              filter_string="tags.mlflow.runName = 'house_rent_ci'",
               order_by=["attributes.start_time DESC"],
               max_results=1
           )
@@ -62,9 +62,10 @@ jobs:
               raise RuntimeError("RUN_ID tidak ditemukan")
 
           run_id = runs[0].info.run_id
-          print("RUN_ID:", run_id)
+          print(f"RUN_ID: {run_id}")
 
-          with open("$GITHUB_ENV", "a") as f:
+          env_file = os.getenv('GITHUB_ENV')
+          with open(env_file, "a") as f:
               f.write(f"RUN_ID={run_id}\n")
           EOF
 
