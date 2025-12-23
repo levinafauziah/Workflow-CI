@@ -34,15 +34,14 @@ jobs:
 
       - name: Run MLflow project
         run: |
-          cd MLProject
-          python modelling.py
+          mlflow run MLProject --env-manager=local
       
       - name: Commit MLflow artifacts to repo
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-          git add MLProject/*.png
+          git add *.png
           git commit -m "Add MLflow artifacts from CI" || echo "No changes to commit"
           git push
 
@@ -54,6 +53,7 @@ jobs:
           client = mlflow.tracking.MlflowClient()
           runs = client.search_runs(
               experiment_ids=["0"],
+              filter_string="tags.mlflow.runName = 'house_rent_ci'",
               order_by=["attributes.start_time DESC"],
               max_results=1
           )
@@ -76,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mlflow-artifacts
-          path: MLProject/*.png
+          path: *.png
 
       - name: Build Docker Model
         run: |
